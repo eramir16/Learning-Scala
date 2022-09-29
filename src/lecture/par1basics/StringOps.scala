@@ -27,4 +27,20 @@ object StringOps extends App {
   val anotherGreeting = s"Hello, my name is $name and I am ${age + 2} years old"
 
   println(anotherGreeting)
+
+
+    //F-interpolators
+
+    val speed =1.2f
+    val myth = f"$name can eat $speed%2.2f burgers per minute"
+    println(myth)
+
+
+    //raw-interpolator
+
+    println(raw"this is a \n newline")
+  val escaped = "this is a \n newline"
+  println(raw"$escaped")
+
+
 }
