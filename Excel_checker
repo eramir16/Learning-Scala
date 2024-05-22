@@ -1,0 +1,42 @@
+import pandas as pd
+from io import StringIO
+
+# Function to compare dataframes and report differences
+def compare_dataframes(df1, df2):
+    if df1.equals(df2):
+        return "PASSED", None
+    else:
+        output = StringIO()
+        output.write("OLD vs NEW\n")
+        diff = df1.compare(df2)
+        diff.to_csv(output, index=True)
+        differences = output.getvalue()
+        output.close()
+        return "FAIL", differences
+
+# Specify the engine based on the file format
+engine_type = 'openpyxl'  # Use 'xlrd' for .xls files
+
+# Load all sheets from two Excel files
+file_path_1 = "test01.xlsx"
+file_path_2 = "Test02.xlsx"
+xls1 = pd.ExcelFile(file_path_1, engine=engine_type)
+xls2 = pd.ExcelFile(file_path_2, engine=engine_type)
+
+output_text = ""
+
+# Compare each corresponding sheet
+for sheet_name in xls1.sheet_names:
+    data1 = pd.read_excel(xls1, sheet_name=sheet_name, engine=engine_type)
+    data2 = pd.read_excel(xls2, sheet_name=sheet_name, engine=engine_type)
+    result, differences = compare_dataframes(data1, data2)
+    output_text += f"********************\nSheet: {sheet_name} - {result}\n********************\n"
+    if differences:
+        output_text += differences + "\n"
+
+# Write the results to a text file
+output_file_path = 'comparison_results.txt'
+with open(output_file_path, "w") as file:
+    file.write(output_text)
+
+output_file_path
